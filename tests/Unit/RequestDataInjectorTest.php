@@ -15,6 +15,24 @@ final class RequestDataInjectorTest extends \PHPUnit\Framework\TestCase
      *
      * @covers \Lcobucci\Chimera\Serialization\Jms\RequestDataInjector
      */
+    public function injectDataShouldBeSkippedWhenContextDepthIsNotOne(): void
+    {
+        $event = $this->createEvent(['foo' => 'bar'], ['bar' => 'baz']);
+
+        /** @var DeserializationContext $context */
+        $context = $event->getContext();
+        $context->increaseDepth();
+
+        $this->processListener($event);
+
+        self::assertSame(['foo' => 'bar'], $event->getData());
+    }
+
+    /**
+     * @test
+     *
+     * @covers \Lcobucci\Chimera\Serialization\Jms\RequestDataInjector
+     */
     public function injectDataShouldAddRouteParamsToData(): void
     {
         $event = $this->createEvent(['foo' => 'bar'], ['bar' => 'baz']);
@@ -78,6 +96,7 @@ final class RequestDataInjectorTest extends \PHPUnit\Framework\TestCase
         ?string $generatedId = null
     ): PreDeserializeEvent {
         $context = DeserializationContext::create();
+        $context->increaseDepth();
 
         if ($routeParams) {
             $context->setAttribute('chimera.route_params', $routeParams);

@@ -12,6 +12,10 @@ final class RequestDataInjector
     {
         $context = $event->getContext();
 
+        if ($context->getDepth() !== 1) {
+            return;
+        }
+
         $event->setData($this->mergeData($event->getData(), $context));
     }
 
