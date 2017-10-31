@@ -49,6 +49,7 @@ final class JsonMessageDeserializationTest extends \PHPUnit\Framework\TestCase
      *
      * @covers \Lcobucci\Chimera\Serialization\Jms\MessageCreator
      * @covers \Lcobucci\Chimera\Serialization\Jms\RequestDataInjector
+     * @covers \Lcobucci\Chimera\Serialization\Jms\DeserializationContext
      */
     public function requestBodyShouldBeUsedOnDeserialization(): void
     {
@@ -65,6 +66,7 @@ final class JsonMessageDeserializationTest extends \PHPUnit\Framework\TestCase
      *
      * @covers \Lcobucci\Chimera\Serialization\Jms\MessageCreator
      * @covers \Lcobucci\Chimera\Serialization\Jms\RequestDataInjector
+     * @covers \Lcobucci\Chimera\Serialization\Jms\DeserializationContext
      */
     public function routeParamsShouldBeUsedOnDeserialization(): void
     {
@@ -81,6 +83,7 @@ final class JsonMessageDeserializationTest extends \PHPUnit\Framework\TestCase
      *
      * @covers \Lcobucci\Chimera\Serialization\Jms\MessageCreator
      * @covers \Lcobucci\Chimera\Serialization\Jms\RequestDataInjector
+     * @covers \Lcobucci\Chimera\Serialization\Jms\DeserializationContext
      */
     public function queryStringParamsShouldBeUsedOnDeserialization(): void
     {
@@ -97,6 +100,7 @@ final class JsonMessageDeserializationTest extends \PHPUnit\Framework\TestCase
      *
      * @covers \Lcobucci\Chimera\Serialization\Jms\MessageCreator
      * @covers \Lcobucci\Chimera\Serialization\Jms\RequestDataInjector
+     * @covers \Lcobucci\Chimera\Serialization\Jms\DeserializationContext
      */
     public function generatedIdShouldBeUsedOnDeserialization(): void
     {
@@ -113,13 +117,14 @@ final class JsonMessageDeserializationTest extends \PHPUnit\Framework\TestCase
      *
      * @covers \Lcobucci\Chimera\Serialization\Jms\MessageCreator
      * @covers \Lcobucci\Chimera\Serialization\Jms\RequestDataInjector
+     * @covers \Lcobucci\Chimera\Serialization\Jms\DeserializationContext
      */
     public function requestDataShouldBeUsedOnDeserializationInTheCorrectPrecedence(): void
     {
         $message = $this->createMessage(
-            '{"_id":"nope","foo":"yeap"}',
-            ['_id' => 'nope', 'foo' => 'nope', 'bar' => 'yeap'],
-            ['_id' => 'nope', 'foo' => 'nope', 'bar' => 'nope', 'baz' => 'yeap'],
+            '{"_request.id":"nope","foo":"yeap"}',
+            ['_request.id' => 'nope', 'foo' => 'nope', 'bar' => 'yeap'],
+            ['_request.id' => 'nope', 'foo' => 'nope', 'bar' => 'nope', 'baz' => 'yeap'],
             'yeap'
         );
 
