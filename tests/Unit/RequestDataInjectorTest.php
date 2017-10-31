@@ -3,17 +3,21 @@ declare(strict_types=1);
 
 namespace Lcobucci\Chimera\Serialization\Jms\Tests\Unit;
 
-use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\PreDeserializeEvent;
+use Lcobucci\Chimera\Serialization\Jms\DeserializationContext;
 use Lcobucci\Chimera\Serialization\Jms\RequestDataInjector;
+use Lcobucci\Chimera\Serialization\Jms\Tests\RequestCreation;
 
 final class RequestDataInjectorTest extends \PHPUnit\Framework\TestCase
 {
+    use RequestCreation;
+
     /**
      * @test
      *
      * @covers \Lcobucci\Chimera\Serialization\Jms\RequestDataInjector
+     * @uses \Lcobucci\Chimera\Serialization\Jms\DeserializationContext
      */
     public function injectDataShouldBeSkippedWhenContextDepthIsNotOne(): void
     {
@@ -32,6 +36,7 @@ final class RequestDataInjectorTest extends \PHPUnit\Framework\TestCase
      * @test
      *
      * @covers \Lcobucci\Chimera\Serialization\Jms\RequestDataInjector
+     * @uses \Lcobucci\Chimera\Serialization\Jms\DeserializationContext
      */
     public function injectDataShouldAddRouteParamsToData(): void
     {
@@ -46,6 +51,7 @@ final class RequestDataInjectorTest extends \PHPUnit\Framework\TestCase
      * @test
      *
      * @covers \Lcobucci\Chimera\Serialization\Jms\RequestDataInjector
+     * @uses \Lcobucci\Chimera\Serialization\Jms\DeserializationContext
      */
     public function injectDataShouldAddQueryParamsToData(): void
     {
@@ -60,6 +66,7 @@ final class RequestDataInjectorTest extends \PHPUnit\Framework\TestCase
      * @test
      *
      * @covers \Lcobucci\Chimera\Serialization\Jms\RequestDataInjector
+     * @uses \Lcobucci\Chimera\Serialization\Jms\DeserializationContext
      */
     public function injectDataShouldAddGeneratedIdToData(): void
     {
@@ -67,26 +74,30 @@ final class RequestDataInjectorTest extends \PHPUnit\Framework\TestCase
 
         $this->processListener($event);
 
-        self::assertSame(['_id' => '1234', 'foo' => 'bar'], $event->getData());
+        self::assertSame(['_request.id' => '1234', 'foo' => 'bar'], $event->getData());
     }
 
     /**
      * @test
      *
      * @covers \Lcobucci\Chimera\Serialization\Jms\RequestDataInjector
+     * @uses \Lcobucci\Chimera\Serialization\Jms\DeserializationContext
      */
     public function injectDataShouldMergeThingsWithCorrectPrecedenceData(): void
     {
         $event = $this->createEvent(
-            ['_id' => 'nope', 'foo' => 'yeap'],
-            ['_id' => 'nope', 'foo' => 'nope', 'bar' => 'yeap'],
-            ['_id' => 'nope', 'foo' => 'nope', 'bar' => 'nope', 'baz' => 'yeap'],
+            ['_request.id' => 'nope', 'foo' => 'yeap'],
+            ['_request.id' => 'nope', 'foo' => 'nope', 'bar' => 'yeap'],
+            ['_request.id' => 'nope', 'foo' => 'nope', 'bar' => 'nope', 'baz' => 'yeap'],
             '1234'
         );
 
         $this->processListener($event);
 
-        self::assertSame(['_id' => '1234', 'foo' => 'yeap', 'bar' => 'yeap', 'baz' => 'yeap'], $event->getData());
+        self::assertSame(
+            ['_request.id' => '1234', 'foo' => 'yeap', 'bar' => 'yeap', 'baz' => 'yeap'],
+            $event->getData()
+        );
     }
 
     private function createEvent(
@@ -95,20 +106,11 @@ final class RequestDataInjectorTest extends \PHPUnit\Framework\TestCase
         ?array $queryParams = null,
         ?string $generatedId = null
     ): PreDeserializeEvent {
-        $context = DeserializationContext::create();
+        $context = DeserializationContext::fromRequest(
+            $this->createRequest(null, $routeParams, $queryParams, $generatedId)
+        );
+
         $context->increaseDepth();
-
-        if ($routeParams) {
-            $context->setAttribute('chimera.route_params', $routeParams);
-        }
-
-        if ($queryParams) {
-            $context->setAttribute('chimera.query_params', $queryParams);
-        }
-
-        if ($generatedId) {
-            $context->setAttribute('chimera.generated_id', $generatedId);
-        }
 
         return new PreDeserializeEvent($context, $data, ['name' => Events::PRE_DESERIALIZE, []]);
     }
