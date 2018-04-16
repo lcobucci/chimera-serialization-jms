@@ -15,12 +15,8 @@
     },
     "require": {
         "php": "^7.2",
-        "http-interop/http-middleware": "^0.4",
-        "jms/serializer": "^1.9",
-        "lcobucci/chimera-foundation": "^1.0@alpha",
-        "lcobucci/chimera-routing": "^1.0@alpha",
-        "lcobucci/chimera-routing-expressive": "^1.0@alpha",
-        "psr/http-message": "^1.0"
+        "jms/serializer": "^1.11",
+        "lcobucci/chimera-foundation": "^1.0@rc"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.8",
@@ -29,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Lcobucci\\Chimera\\Serialization\\Jms\\": "src"
+            "Lcobucci\\Chimera\\MessageCreator\\JmsSerializer\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Lcobucci\\Chimera\\Serialization\\Jms\\Tests\\": "tests"
+            "Lcobucci\\Chimera\\MessageCreator\\JmsSerializer\\Tests\\": "tests"
         }
     },
     "extra": {
