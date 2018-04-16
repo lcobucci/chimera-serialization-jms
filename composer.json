@@ -1,6 +1,6 @@
 {
     "name": "lcobucci/chimera-serialization-jms",
-    "description": "Provides message creator and response converter that uses jms/serializer",
+    "description": "Adapter for jms/serializer which allows you to create messages to be handled",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -14,7 +14,7 @@
         "sort-packages": true
     },
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "http-interop/http-middleware": "^0.4",
         "jms/serializer": "^1.9",
         "lcobucci/chimera-foundation": "^1.0@alpha",
