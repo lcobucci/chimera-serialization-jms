@@ -34,7 +34,7 @@ final class ArrayTransformerTest extends TestCase
 
         $transformer->expects(self::once())
                     ->method('fromArray')
-                    ->with($data, stdClass::class, $this->equalTo(new DeserializationContext($input)))
+                    ->with($data, stdClass::class, new DeserializationContext($input))
                     ->willReturn((object) $data);
 
         $creator = new ArrayTransformer($transformer);
