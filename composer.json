@@ -1,6 +1,6 @@
 {
     "name": "lcobucci/chimera-serialization-jms",
-    "description": "Provides message creator and response converter that uses jms/serializer",
+    "description": "Adapter for jms/serializer which allows you to create messages to be handled",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -14,27 +14,27 @@
         "sort-packages": true
     },
     "require": {
-        "php": "^7.1",
-        "http-interop/http-middleware": "^0.4",
-        "jms/serializer": "^1.9",
-        "lcobucci/chimera-foundation": "^1.0@alpha",
-        "lcobucci/chimera-routing": "^1.0@alpha",
-        "lcobucci/chimera-routing-expressive": "^1.0@alpha",
-        "psr/http-message": "^1.0"
+        "php": "^7.2",
+        "jms/serializer": "^1.11",
+        "lcobucci/chimera-foundation": "^1.0@rc"
     },
     "require-dev": {
-        "phpstan/phpstan": "^0.8",
-        "phpunit/phpunit": "^6.4",
+        "doctrine/coding-standard": "^4.0",
+        "infection/infection": "^0.8",
+        "phpstan/phpstan": "^0.10@dev",
+        "phpstan/phpstan-phpunit": "^0.10@dev",
+        "phpstan/phpstan-strict-rules": "^0.10@dev",
+        "phpunit/phpunit": "^7.1",
         "squizlabs/php_codesniffer": "^3.1"
     },
     "autoload": {
         "psr-4": {
-            "Lcobucci\\Chimera\\Serialization\\Jms\\": "src"
+            "Lcobucci\\Chimera\\MessageCreator\\JmsSerializer\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Lcobucci\\Chimera\\Serialization\\Jms\\Tests\\": "tests"
+            "Lcobucci\\Chimera\\MessageCreator\\JmsSerializer\\Tests\\": "tests"
         }
     },
     "extra": {
