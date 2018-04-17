@@ -36,7 +36,7 @@ final class InputDataInjectorTest extends TestCase
      */
     public function createInput(): void
     {
-        $this->input   = $this->createMock(Input::class);
+        $this->input = $this->createMock(Input::class);
 
         $context = new DeserializationContext($this->input);
         $context->increaseDepth();

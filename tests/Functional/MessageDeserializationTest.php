@@ -12,9 +12,10 @@ use Lcobucci\Chimera\IdentifierGenerator;
 use Lcobucci\Chimera\Input;
 use Lcobucci\Chimera\MessageCreator\JmsSerializer\ArrayTransformer;
 use Lcobucci\Chimera\MessageCreator\JmsSerializer\InputDataInjector;
+use PHPUnit\Framework\TestCase;
 use function assert;
 
-final class MessageDeserializationTest extends \PHPUnit\Framework\TestCase
+final class MessageDeserializationTest extends TestCase
 {
     /**
      * @var Serializer
@@ -95,6 +96,9 @@ final class MessageDeserializationTest extends \PHPUnit\Framework\TestCase
         self::assertSame('three', $message->baz);
     }
 
+    /**
+     * @param mixed[] $data
+     */
     private function createMessage(
         array $data = [],
         ?string $generatedId = null
@@ -123,13 +127,18 @@ final class MessageDeserializationTest extends \PHPUnit\Framework\TestCase
              */
             private $attributes = [];
 
+            /**
+             * @param mixed[] $data
+             */
             public function __construct(array $data, ?string $generatedId = null)
             {
                 $this->data = $data;
 
-                if ($generatedId !== null) {
-                    $this->attributes[IdentifierGenerator::class] = $generatedId;
+                if ($generatedId === null) {
+                    return;
                 }
+
+                $this->attributes[IdentifierGenerator::class] = $generatedId;
             }
 
             /**

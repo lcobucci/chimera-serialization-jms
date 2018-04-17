@@ -5,11 +5,12 @@ namespace Lcobucci\Chimera\MessageCreator\JmsSerializer\Tests\Unit;
 
 use Lcobucci\Chimera\Input;
 use Lcobucci\Chimera\MessageCreator\JmsSerializer\DeserializationContext;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @coversDefaultClass \Lcobucci\Chimera\MessageCreator\JmsSerializer\DeserializationContext
  */
-final class DeserializationContextTest extends \PHPUnit\Framework\TestCase
+final class DeserializationContextTest extends TestCase
 {
     /**
      * @test

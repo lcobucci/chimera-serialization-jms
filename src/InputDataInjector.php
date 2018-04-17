@@ -24,6 +24,11 @@ final class InputDataInjector
         );
     }
 
+    /**
+     * @param mixed[] $data
+     *
+     * @return mixed[]
+     */
     private function mergeData(array $data, Input $input): array
     {
         $generatedId = $input->getAttribute(IdentifierGenerator::class);
