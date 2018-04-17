@@ -8,8 +8,6 @@ use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
-use Lcobucci\Chimera\IdentifierGenerator;
-use Lcobucci\Chimera\Input;
 use Lcobucci\Chimera\MessageCreator\JmsSerializer\ArrayTransformer;
 use Lcobucci\Chimera\MessageCreator\JmsSerializer\InputDataInjector;
 use PHPUnit\Framework\TestCase;
@@ -104,58 +102,9 @@ final class MessageDeserializationTest extends TestCase
         ?string $generatedId = null
     ): DoSomething {
         $creator = new ArrayTransformer($this->serializer);
-        $message = $creator->create(DoSomething::class, $this->createInput($data, $generatedId));
+        $message = $creator->create(DoSomething::class, new FakeInput($data, $generatedId));
         assert($message instanceof DoSomething);
 
         return $message;
-    }
-
-    /**
-     * @param mixed[] $data
-     */
-    private function createInput(array $data, ?string $generatedId): Input
-    {
-        return new class($data, $generatedId) implements Input
-        {
-            /**
-             * @var mixed[]
-             */
-            private $data;
-
-            /**
-             * @var mixed[]
-             */
-            private $attributes = [];
-
-            /**
-             * @param mixed[] $data
-             */
-            public function __construct(array $data, ?string $generatedId = null)
-            {
-                $this->data = $data;
-
-                if ($generatedId === null) {
-                    return;
-                }
-
-                $this->attributes[IdentifierGenerator::class] = $generatedId;
-            }
-
-            /**
-             * {@inheritdoc}
-             */
-            public function getAttribute(string $name, $default = null)
-            {
-                return $this->attributes[$name] ?? $default;
-            }
-
-            /**
-             * {@inheritdoc}
-             */
-            public function getData(): array
-            {
-                return $this->data;
-            }
-        };
     }
 }
